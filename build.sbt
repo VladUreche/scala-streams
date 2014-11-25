@@ -13,9 +13,7 @@ libraryDependencies ++= Seq(
   "org.scala-lang" % "scala-reflect" % "2.11.4"
 )
 
-scalacOptions ++= Seq("-optimise", 
-		      "-Yclosure-elim",
-		      "-Yinline")
+scalacOptions ++= Seq("-Yclosure-elim")
 
 javaOptions in run ++= Seq("-Xmx3G", 
 			   "-Xms3G", 
@@ -43,3 +41,5 @@ addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-S
 scalacOptions ++= Seq("-P:minibox:warn", "-P:minibox:mark-all")
 
 // scalacOptions ++= Seq("-P:minibox:warn")
+
+// assembly:
