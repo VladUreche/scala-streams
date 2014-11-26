@@ -1,36 +1,36 @@
 import streams._
 
 package benchmarks {
-  import org.openjdk.jmh.annotations.Benchmark
-  import org.openjdk.jmh.annotations.Scope
-  import org.openjdk.jmh.annotations.Setup
-  import org.openjdk.jmh.annotations.State
-  import org.openjdk.jmh.annotations.BenchmarkMode
-  import org.openjdk.jmh.annotations.Mode
-  import org.openjdk.jmh.annotations.Fork
-  import org.openjdk.jmh.annotations.OutputTimeUnit
-  import java.util.concurrent.TimeUnit
+//  import org.openjdk.jmh.annotations.Benchmark
+//  import org.openjdk.jmh.annotations.Scope
+//  import org.openjdk.jmh.annotations.Setup
+//  import org.openjdk.jmh.annotations.State
+//  import org.openjdk.jmh.annotations.BenchmarkMode
+//  import org.openjdk.jmh.annotations.Mode
+//  import org.openjdk.jmh.annotations.Fork
+//  import org.openjdk.jmh.annotations.OutputTimeUnit
+//  import java.util.concurrent.TimeUnit
 
   class Ref(var num: Int = 0)
 
-  @OutputTimeUnit(TimeUnit.MILLISECONDS)
-  @BenchmarkMode(Array(Mode.AverageTime))
-  @State(Scope.Thread)
-  @Fork(1)
+//  @OutputTimeUnit(TimeUnit.MILLISECONDS)
+//  @BenchmarkMode(Array(Mode.AverageTime))
+//  @State(Scope.Thread)
+//  @Fork(1)
   class StreamsBenchmarks {
     var N: Int = _
-    var v: Array[Long] = _
+//    var v: Array[Long] = _
     var vHi: Array[Long] = _
     var vLo: Array[Long] = _
-    var refs: Array[Ref] = _
+//    var refs: Array[Ref] = _
 
-    @Setup
+//    @Setup
     def prepare() : Unit = {
       N    = 10000000
-      v    = Array.tabulate(N)(i => i.toLong % 1000)
+//      v    = Array.tabulate(N)(i => i.toLong % 1000)
       vHi  = Array.tabulate(1000000)(_.toLong)
       vLo  = Array.tabulate(10)(_.toLong)
-      refs = Array.tabulate(N)(x=>new Ref(x))
+//      refs = Array.tabulate(N)(x=>new Ref(x))
     }
 
 //    // Baselines
@@ -173,7 +173,7 @@ package benchmarks {
 //      res
 //    }
 
-    @Benchmark
+//    @Benchmark
     def streams_cart(): Long = {
       val sum: Long = Stream(vHi)
         .flatMap(new MbFunction1[Long, Stream[Long]] {
@@ -199,5 +199,23 @@ package benchmarks {
 //        .size
 //      res
 //    }
+  }
+}
+
+object Test {
+  def main(args: Array[String]): Unit = {
+    val s = new benchmarks.StreamsBenchmarks()
+    s.prepare()
+    System.gc()
+    println("\n"*100 + "DONE PREPARE")
+    var idx = 0
+    while (idx<40) {
+      val start = System.currentTimeMillis()
+      val r = s.streams_cart()
+      val stop = System.currentTimeMillis()
+      println("Iteration took " + (stop-start) + "ms (result = " + r +")")
+      System.gc()
+      idx+=1
+    }
   }
 }

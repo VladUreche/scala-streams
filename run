@@ -1,0 +1,4 @@
+#!/bin/bash
+sbt clean assembly
+unset _JAVA_OPTIONS
+for a in `seq 1 10`; do java -jar target/scala-2.11/scala-streams-assembly-1.0.jar; sleep 10; done

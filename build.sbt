@@ -1,4 +1,4 @@
-import JmhKeys._
+// import JmhKeys._
 
 name := "scala-streams"
 
@@ -13,20 +13,18 @@ libraryDependencies ++= Seq(
   "org.scala-lang" % "scala-reflect" % "2.11.4"
 )
 
-scalacOptions ++= Seq("-Yclosure-elim")
+//javaOptions in run ++= Seq("-Xmx3G", 
+//			   "-Xms3G", 
+//			   "-XX:+TieredCompilation" ,
+//			   "-XX:+UseParallelGC")
 
-javaOptions in run ++= Seq("-Xmx3G", 
-			   "-Xms3G", 
-			   "-XX:+TieredCompilation" ,
-			   "-XX:+UseParallelGC")
-
-testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "5", "-minSuccessfulTests", "100", "-workers", "1", "-verbosity", "1")
+// testOptions in Test += Tests.Argument(TestFrameworks.ScalaCheck, "-maxSize", "5", "-minSuccessfulTests", "100", "-workers", "1", "-verbosity", "1")
 
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 // jmh:
 
-jmhSettings
+// jmhSettings
 
 // eclipse:
 
