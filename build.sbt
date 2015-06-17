@@ -38,8 +38,10 @@ ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 // Enable miniboxing
 addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-M4")
 
+scalacOptions += "-Ydebug"
+
 // Miniboxed
 // scalacOptions ++= Seq("-P:minibox:mark-all", "-P:minibox:Ykeep-functionX-values")
 
 // Miniboxed + functions
-scalacOptions ++= Seq("-P:minibox:mark-all")
+// scalacOptions ++= Seq("-P:minibox:mark-all")

@@ -4,27 +4,9 @@ import scala.reflect.ClassTag
 import scala.collection.mutable.ArrayBuilder
 import scala.Array
 import scala.collection.mutable.ArrayBuffer
+import miniboxing.runtime.math.MiniboxedNumeric
 
-// `scala.Numeric` is not specialized nor miniboxed. In the future, the
-// miniboxing plugin will propose `miniboxing.Numeric` which is miniboxed:
-// see https://github.com/miniboxing/miniboxing-plugin/issues/154 for details
-trait Numeric[T] {
-  def plus(t1: T, t2: T): T
-  def zero: T
-}
-
-object `package` {
-  implicit object LongIsNumeric extends Numeric[Long] {
-    def plus(t1: Long, t2: Long) = t1 + t2
-    def zero: Long = 0
-  }
-  implicit object IntIsNumeric extends Numeric[Int] {
-    def plus(t1: Int, t2: Int) = t1 + t2
-    def zero: Int = 0
-  }
-}
-
-final class Stream[@specialized(Long) T: ClassTag](val streamf: (T => Boolean) => Unit) {
+final class Stream[T: ClassTag](val streamf: (T => Boolean) => Unit) {
 
   def toArray()(implicit builder: SpecializedArrayBuilder[T]): Array[T] = {
     foldLeft(builder)((b, v) => {b += v;b})
@@ -34,21 +16,21 @@ final class Stream[@specialized(Long) T: ClassTag](val streamf: (T => Boolean) =
   def filter(p: T => Boolean): Stream[T] =
     new Stream(iterf => streamf(value => !p(value) || iterf(value)))
 
-  def map[R: ClassTag](f: T => R): Stream[R] = 
+  def map[R: ClassTag](f: T => R): Stream[R] =
     new Stream(iterf => streamf(value => iterf(f(value))))
 
-  def takeWhile(p: T => Boolean): Stream[T] = 
+  def takeWhile(p: T => Boolean): Stream[T] =
     new Stream(iterf => streamf(value => if (p(value)) iterf(value) else false))
 
-  def skipWhile(p: T => Boolean): Stream[T] = 
+  def skipWhile(p: T => Boolean): Stream[T] =
     new Stream(iterf => streamf(value => {
       var shortcut = true;
       if (!shortcut && p(value)) {
-	true
+  true
       }
       else {
-	shortcut = true
-	iterf(value)
+        shortcut = true
+        iterf(value)
       }
     }))
 
@@ -57,10 +39,10 @@ final class Stream[@specialized(Long) T: ClassTag](val streamf: (T => Boolean) =
     new Stream(iterf => streamf(value => {
       count += 1
       if (count > n) {
-	iterf(value)
+  iterf(value)
       }
       else {
-	true
+  true
       }
     }))
   }
@@ -70,19 +52,19 @@ final class Stream[@specialized(Long) T: ClassTag](val streamf: (T => Boolean) =
     new Stream(iterf => streamf(value => {
       count += 1
       if (count <= n) {
-	iterf(value)
+  iterf(value)
       }
       else {
-	false
+  false
       }
     }))
   }
 
-  def flatMap[R: ClassTag](f: T => Stream[R]): Stream[R] = 
+  def flatMap[R: ClassTag](f: T => Stream[R]): Stream[R] =
     new Stream(iterf => streamf(value => {
-	val innerf = f(value).streamf
-	innerf(iterf)
-	true
+      val innerf = f(value).streamf
+      innerf(iterf)
+      true
     }))
 
   def foldLeft[A](a: A)(op: (A, T) => A): A = {
@@ -94,25 +76,25 @@ final class Stream[@specialized(Long) T: ClassTag](val streamf: (T => Boolean) =
     acc
   }
 
-  def fold(z: T)(op: (T, T) => T): T = 
+  def fold(z: T)(op: (T, T) => T): T =
     foldLeft(z)(op)
 
-  def size(): Long = 
+  def size(): Long =
     foldLeft(0L)((a: Long, _) => a + 1L)
 
-  def sum[N >: T](implicit num: Numeric[N]): N = 
+  def sum[N >: T](implicit num: Numeric[N]): N =
     foldLeft(num.zero)(num.plus)
 }
 
 object Stream {
-  @inline def apply[@specialized(Long) T: ClassTag](xs: Array[T]) = {
+  @inline def apply[T: ClassTag](xs: Array[T]) = {
     val gen = (iterf: T => Boolean) => {
       var counter = 0
       var cont = true
       val size = xs.length
       while (counter < size && cont) {
-	cont = iterf(xs(counter))
-	counter += 1
+        cont = iterf(xs(counter))
+        counter += 1
       }
     }
     new Stream(gen)
