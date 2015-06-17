@@ -39,10 +39,10 @@ final class Stream[T: ClassTag](val streamf: (T => Boolean) => Unit) {
     new Stream(iterf => streamf(value => {
       count += 1
       if (count > n) {
-  iterf(value)
+        iterf(value)
       }
       else {
-  true
+        true
       }
     }))
   }
@@ -52,10 +52,10 @@ final class Stream[T: ClassTag](val streamf: (T => Boolean) => Unit) {
     new Stream(iterf => streamf(value => {
       count += 1
       if (count <= n) {
-  iterf(value)
+        iterf(value)
       }
       else {
-  false
+        false
       }
     }))
   }
