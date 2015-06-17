@@ -13,11 +13,6 @@ libraryDependencies ++= Seq(
   "org.scala-miniboxing.plugins" %% "miniboxing-runtime" % "0.4-M4"
 )
 
-scalacOptions ++= Seq("-optimise",
-		      "-Yclosure-elim",
-		      "-Yinline",
-		      "-Yinline-warnings")
-
 enablePlugins(JmhPlugin)
 
 javaOptions in run ++= Seq("-Xms2g", "-Xmx2g", "-Xss4m",
@@ -37,8 +32,6 @@ ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 // Enable miniboxing
 addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-M4")
-
-scalacOptions += "-Ydebug"
 
 // Miniboxed
 // scalacOptions ++= Seq("-P:minibox:mark-all", "-P:minibox:Ykeep-functionX-values")
