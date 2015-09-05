@@ -10,7 +10,7 @@ resolvers ++= Seq(Resolver.sonatypeRepo("releases"),
 libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.11.6" % "test",
   "org.scala-lang" % "scala-reflect" % "2.11.4",
-  "org.scala-miniboxing.plugins" %% "miniboxing-runtime" % "0.4-M4"
+  "org.scala-miniboxing.plugins" %% "miniboxing-runtime" % "0.4-M5"
 )
 
 enablePlugins(JmhPlugin)
@@ -31,10 +31,7 @@ ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 
 // Enable miniboxing
-addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-M4")
+addCompilerPlugin("org.scala-miniboxing.plugins" %% "miniboxing-plugin" % "0.4-M5")
 
-// Miniboxed
-// scalacOptions ++= Seq("-P:minibox:mark-all", "-P:minibox:Ykeep-functionX-values")
-
-// Miniboxed + functions
-// scalacOptions ++= Seq("-P:minibox:mark-all")
+// Miniboxed off, to start
+scalacOptions ++= Seq("-P:minibox:off")
